@@ -12,6 +12,28 @@ class Entity():
         self.force = int(force)
 
 
+############  add une boucle qui tourne tant que 1 des 2 est mort
+    def combat(self, adversaire, victoire):
+        if self.force > adversaire.force:
+            self.vie += adversaire.force
+            victoire += 1
+            print("""
+
+              Combat Gagné!!
+
+              Niveau de vie : """, player.vie, """
+              Nombre de victoires consécutives : """, victoire, """
+
+          """)
+
+        elif self.force == adversaire.force:
+            print("c'est égalité")
+
+        else:
+            print(adversaire.nom, "à gagné...")
+            self.vie -= adversaire.force
+
+
 class Living_entity(Entity):
     def __init__(self, force, nom, vie):
         super().__init__(force, nom)
@@ -32,7 +54,7 @@ class Living_entity(Entity):
 
         elif self.force == adversaire.force:
             print("c'est égalité")
-
+            adversaire.vie -= adversaire.force
         else:
             print(adversaire.nom, "à gagné...")
             self.vie -= adversaire.force
@@ -41,7 +63,7 @@ class Living_entity(Entity):
 # création des entity
 # les monstres
 monstreNom = ["bigBrother", "Gandalf", "Dani", "Boba", "Golum", "Jack", "iShowSpeed"]
-player = Entity(5, 'player', 20)
+player = Living_entity(5, 'player', 20)
 alive = True
 regleJeux = ("""
 
@@ -63,7 +85,7 @@ il y a une pénalité de 1 point de vie.
 """)
 
 while alive:
-    boss = Entity(random.randint(0, 10), monstreNom[random.randint(0, 6)], 0)
+    boss = Living_entity(random.randint(0, 10), monstreNom[random.randint(0, 6)], 5)
 
     print("Vous tombez face à face avec un adversaire de difficulté : ", boss.force)
     choix = int(input("""
