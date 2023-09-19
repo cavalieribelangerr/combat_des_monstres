@@ -5,18 +5,24 @@ import random
 
 
 # structure de data des Entity sous forme de classe
-class Entity:
+class Entity():
 
-    def __init__(self, force, nom, vie):
+    def __init__(self, force, nom):
         self.nom = nom
         self.force = int(force)
-        self.vie = int(vie)
+
+
+class Living_entity(Entity):
+    def __init__(self, force, nom, vie):
+        super().__init__(force, nom)
+        self.vie = vie
 
     def combat(self, adversaire, victoire):
         if self.force > adversaire.force:
-            player.vie += adversaire.force
+            self.vie += adversaire.force
             victoire += 1
             print("""
+            
               Combat Gagné!!
 
               Niveau de vie : """, player.vie, """
@@ -24,13 +30,12 @@ class Entity:
 
           """)
 
-
         elif self.force == adversaire.force:
             print("c'est égalité")
 
         else:
             print(adversaire.nom, "à gagné...")
-            player.vie -= adversaire.force
+            self.vie -= adversaire.force
 
 
 # création des entity
@@ -39,6 +44,7 @@ monstreNom = ["bigBrother", "Gandalf", "Dani", "Boba", "Golum", "Jack", "iShowSp
 player = Entity(5, 'player', 20)
 alive = True
 regleJeux = ("""
+
 
 voici les regles: 
 Pour réussir un combat, il faut que la valeur du dé lancé soit supérieure à la force de 
@@ -92,6 +98,9 @@ while alive:
     if player.vie <= 0:
         print("game over")
         alive = False
+
+
+
 
 
 
