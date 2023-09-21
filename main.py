@@ -12,52 +12,64 @@ class Entity():
         self.force = int(force)
 
 
-############  add une boucle qui tourne tant que 1 des 2 est mort
-    def combat(self, adversaire, victoire):
+    def combat(self, adversaire, nb_victoire):
+        winner = 0
         if self.force > adversaire.force:
             self.vie += adversaire.force
-            victoire += 1
             print("""
 
               Combat Gagné!!
 
               Niveau de vie : """, player.vie, """
-              Nombre de victoires consécutives : """, victoire, """
+              Nombre de victoires consécutives : """, nb_victoire, """
 
           """)
+            winner = 1
 
         elif self.force == adversaire.force:
             print("c'est égalité")
+            winner = 0
 
         else:
             print(adversaire.nom, "à gagné...")
             self.vie -= adversaire.force
+            winner = 0
 
+        return winner
 
 class Living_entity(Entity):
     def __init__(self, force, nom, vie):
         super().__init__(force, nom)
         self.vie = vie
 
-    def combat(self, adversaire, victoire):
+    def combat_boss(self, adversaire):
+
         if self.force > adversaire.force:
             self.vie += adversaire.force
-            victoire += 1
             print("""
             
               Combat Gagné!!
 
               Niveau de vie : """, player.vie, """
-              Nombre de victoires consécutives : """, victoire, """
+              Nombre de victoires consécutives : """, nb_victoire, """
 
           """)
+
 
         elif self.force == adversaire.force:
             print("c'est égalité")
             adversaire.vie -= adversaire.force
+
+
         else:
             print(adversaire.nom, "à gagné...")
             self.vie -= adversaire.force
+        if adversaire.vie <= 0:
+            return 1
+        elif self.vie <= 0:
+            return 0
+        else:
+            return 2
 
 
 # création des entity
@@ -83,9 +95,14 @@ il y a une pénalité de 1 point de vie.
 
 
 """)
-
+fight_boss = False
+nb_victoire = 0
 while alive:
-    boss = Living_entity(random.randint(0, 10), monstreNom[random.randint(0, 6)], 5)
+    player.force = random.randint(0, 20)
+    boss = Living_entity(random.randint(0, 10), monstreNom[random.randint(0, 6)], random.randint(0, 10))
+    mob = Entity(random.randint(0, 5), monstreNom[random.randint(0, 6)])
+
+
 
     print("Vous tombez face à face avec un adversaire de difficulté : ", boss.force)
     choix = int(input("""
@@ -98,24 +115,53 @@ while alive:
 
 """))
     if choix == 1:
-        player.force = random.randint(0, 10)
+
         print("""
 
-    Adversaire : """, boss.nom, """
-    Force de l’adversaire : """, boss.force, """
+    Adversaire : """, mob.nom, """
+    Force de l’adversaire : """, mob.force, """
     Niveau de vie de l’usager : """, player.vie, """
-    Combat numero_combat : nombre victoire X
+    Combat numero_combat : """, nb_victoire, """
 
     lancé du dé : """, player.force, """
     """)
-        player.combat(boss, 6)
+        player.combat(mob, nb_victoire)
+        if player.combat(mob, nb_victoire) == 0:
+            nb_victoire = 0
+        else:
+            print('add')
+            nb_victoire += 1
 
     elif choix == 2:
         player.vie -= 1
     elif choix == 3:
         print(regleJeux)
     elif choix == 4:
-        print("fin de partie, vous avez accumulé X victoire")
+        print("fin de partie, vous avez accumulé ", nb_victoire ," victoire")
+
+    if nb_victoire == 3:
+        print("vous allez affronter un BOSS")
+        fight_boss = True
+
+        while fight_boss:
+            player.combat_boss(boss)
+            if player.combat_boss(boss) == 1:
+                nb_victoire += 3
+                player.vie += 2*boss.vie
+                print("""
+
+                    Combat Gagné contre le Boss!!
+
+                    Niveau de vie : """, player.vie, """
+                    Nombre de victoires consécutives (bonus boss) : """, nb_victoire, """
+
+                """)
+                fight_boss = False
+            elif player.combat_boss(boss) == 0:
+                fight_boss = False
+            elif player.combat_boss(boss) == 2:
+                fight_boss = True
+
 
     if player.vie <= 0:
         print("game over")
