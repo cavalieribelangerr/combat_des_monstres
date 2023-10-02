@@ -95,8 +95,11 @@ il y a une pénalité de 1 point de vie.
 
 
 """)
+
+
 fight_boss = False
 nb_victoire = 0
+
 while alive:
     player.force = random.randint(0, 20)
     boss = Living_entity(random.randint(0, 10), monstreNom[random.randint(0, 6)], random.randint(0, 10))
@@ -114,6 +117,7 @@ while alive:
 	4- Quitter la partie
 
 """))
+
     if choix == 1:
 
         print("""
@@ -124,12 +128,14 @@ while alive:
     Combat numero_combat : """, nb_victoire, """
 
     lancé du dé : """, player.force, """
+    
     """)
-        player.combat(mob, nb_victoire)
-        if player.combat(mob, nb_victoire) == 0:
+        m = player.combat(mob, nb_victoire)
+        if m == 0:
             nb_victoire = 0
         else:
             print('add')
+            print(nb_victoire)
             nb_victoire += 1
 
     elif choix == 2:
@@ -138,6 +144,7 @@ while alive:
         print(regleJeux)
     elif choix == 4:
         print("fin de partie, vous avez accumulé ", nb_victoire ," victoire")
+
 
     if nb_victoire == 3:
         print("vous allez affronter un BOSS")
@@ -161,6 +168,7 @@ while alive:
                 fight_boss = False
             elif player.combat_boss(boss) == 2:
                 fight_boss = True
+
 
 
     if player.vie <= 0:
