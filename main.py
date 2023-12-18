@@ -47,7 +47,7 @@ class Living_entity(Entity):
         print("""état du Boss
         Vie: """, adversaire.vie, """             
         Force: """, adversaire.force, """ 
-        Nom: """, adversaire.vie)
+        Nom: """, adversaire.nom)
         if self.force > adversaire.force:
             adversaire.vie -= self.force
             print("""
